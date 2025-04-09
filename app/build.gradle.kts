@@ -58,4 +58,3 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 }
 
-
