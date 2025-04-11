@@ -1,18 +1,14 @@
 package com.example.money_up
 
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Button
-import androidx.room.Room
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import data.MoneyUpDatabase
-import data.OfflineUsersRepository
-import data.User
+import data.UserTable.OfflineUsersRepository
+import data.UserTable.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

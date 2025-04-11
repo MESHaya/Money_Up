@@ -1,4 +1,4 @@
-package data
+package data.UserTable
 
 import kotlinx.coroutines.flow.Flow
 

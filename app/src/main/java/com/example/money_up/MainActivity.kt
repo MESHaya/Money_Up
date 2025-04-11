@@ -6,7 +6,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import data.MoneyUpDatabase
-import data.UserDao
+import data.UserTable.UserDao
 
 class MainActivity : AppCompatActivity() {
 

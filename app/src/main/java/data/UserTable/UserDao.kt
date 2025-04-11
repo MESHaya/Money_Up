@@ -1,9 +1,8 @@
 
-package data
+package data.UserTable
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.OnConflictStrategy
@@ -26,6 +25,7 @@ interface UserDao {
 
     @Query("SELECT * from users ORDER BY name ASC")
     fun getAllUsers(): Flow<List<User>>
+
 
 
 
