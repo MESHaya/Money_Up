@@ -70,7 +70,7 @@ class SignUpActivity : AppCompatActivity() {
             }
 
 
-            //create a new user object
+            //create a new user object - add in database
                 val user = User(
                     name = name,
                     surname = surname,

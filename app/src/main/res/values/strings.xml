@@ -2,4 +2,21 @@
     <string name="app_name">Money_Up</string>
     <string name="hyperlink">Already Registered?Log in here<a href="C:\Users\munnh\AndroidStudioProjects\Money_Up\app\src\main\res\layout\activity_log_in_page.xml"></a></string>
     <string name="hyperlink1">Sign Up<a href="C:\Users\munnh\AndroidStudioProjects\Money_Up\app\src\main\res\layout\activity_sign_up_page.xml"></a></string>
+
+    <string-array name="category_colors">
+        <item>Red</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Yellow</item>
+        <item>Purple</item>
+        <item>Teal</item>
+    </string-array>
+
+    <string-array name="filter_options">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Category</item>
+    </string-array>
+
 </resources>

@@ -49,6 +49,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //bottom navigation
+    implementation ("com.google.android.material:material:1.11.0")
+
+
     //Room
 
     implementation("androidx.room:room-runtime:2.6.1")
