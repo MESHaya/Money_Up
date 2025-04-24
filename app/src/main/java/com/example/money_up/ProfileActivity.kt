@@ -50,7 +50,7 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             // Highlight current tab
-            bottomNav.selectedItemId = R.id.nav_expenses
+            bottomNav.selectedItemId = R.id.nav_profile
         }
     }
 

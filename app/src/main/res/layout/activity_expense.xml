@@ -92,28 +92,39 @@
     <!-- Submit Button -->
 
     <ImageView
-        android:id="@android:id/icon"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:onClick="selectImage"
-        android:text="upload"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:id="@+id/photo_preview"
+        android:layout_width="104dp"
+        android:layout_height="101dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/upload"
+        app:layout_constraintTop_toBottomOf="@id/spinner_category"
+        tools:layout_editor_absoluteX="138dp" />
 
+    <Button
+        android:id="@+id/upload_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Upload Photo"
+        app:layout_constraintTop_toBottomOf="@id/photo_preview"
+        tools:layout_editor_absoluteX="129dp" />
+
+    <!-- Bottom Navigation -->
     <Button
         android:id="@+id/btn_save_expense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Expense"
+        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/orange"
+        android:text="Save Expense"
         android:textColor="@color/dark_green"
-        app:layout_constraintTop_toBottomOf="@id/spinner_category"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        app:layout_constraintHorizontal_bias="0.459"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/upload_photo_button" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"

@@ -3,6 +3,7 @@ package com.example.money_up
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,16 @@ class HomePageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
+
+      val   add_expenseBTN = findViewById<Button>(R.id.add_expenseBTN)
+
+        //add expense button functionality
+        add_expenseBTN.setOnClickListener{
+            val intent = Intent(this,ExpenseActivity::class.java)
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+            startActivity(intent, options.toBundle())
+            true
+        }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 

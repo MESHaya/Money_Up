@@ -2,18 +2,44 @@ package com.example.money_up
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ExpenseActivity : AppCompatActivity() {
+
+    private lateinit var imageView: ImageView
+    private var selectedImageUri: Uri? = null
+
+    // Modern image picker launcher
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                selectedImageUri = it
+                imageView.setImageURI(it)
+            }
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_expense)
+
+        val uploadPhotoBtn = findViewById<Button>(R.id.upload_photo_button)
+        imageView = findViewById(R.id.photo_preview)
+
+        //upload photo functionality
+        uploadPhotoBtn.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
