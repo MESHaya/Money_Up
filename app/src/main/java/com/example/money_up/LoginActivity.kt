@@ -1,14 +1,20 @@
 package com.example.money_up
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import data.MoneyUpDatabase
 import data.UserTable.OfflineUsersRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
@@ -27,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
         repository = OfflineUsersRepository(userDao)
 
 
-
         val usernameInput = findViewById<EditText>(R.id.username)
         val passwordInput = findViewById<EditText>(R.id.password)
         val remember_me = findViewById<CheckBox>(R.id.remember_me)
@@ -37,14 +42,47 @@ class LoginActivity : AppCompatActivity() {
 
         //handle functionality of the login button
 
-        loginBTN.setOnClickListener{
+        loginBTN.setOnClickListener {
             val username = usernameInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
+
+            if (username.isEmpty() || password.isEmpty()) {
+                //show error if empty field
+                Toast.makeText(this, "Fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            //Launch a courutine to query db
+            CoroutineScope(Dispatchers.IO).launch {
+                val user = repository.getUserByUsernameAndPassword(username, password)
+
+                withContext(Dispatchers.Main) {
+                    if (user != null) {
+                        // Login successful
+                        Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT)
+                            .show()
+
+                        // Navigate to main/home activity
+                        val intent = Intent(this@LoginActivity, HomePageActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // Invalid login
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Invalid username or password",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
-
-        //check if user is in the database
-
-
-
+        //handle the functionality of the sign up text
+        signuplink.setOnClickListener{
+            val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
+    }
+
+
