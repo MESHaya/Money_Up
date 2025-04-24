@@ -12,20 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import data.ExpenseTable.Expense
+import data.ExpenseTable.OfflineExpenseRepository
+import data.MoneyUpDatabase
+import kotlinx.coroutines.CoroutineScope
 
 class ExpenseActivity : AppCompatActivity() {
-
-    private lateinit var imageView: ImageView
-    private var selectedImageUri: Uri? = null
-
-    // Modern image picker launcher
-    private val pickImageLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                selectedImageUri = it
-                imageView.setImageURI(it)
-            }
-        }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,13 +25,7 @@ class ExpenseActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_expense)
 
-        val uploadPhotoBtn = findViewById<Button>(R.id.upload_photo_button)
-        imageView = findViewById(R.id.photo_preview)
 
-        //upload photo functionality
-        uploadPhotoBtn.setOnClickListener {
-            pickImageLauncher.launch("image/*")
-        }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
