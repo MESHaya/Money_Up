@@ -25,5 +25,8 @@ data class Category(
     val user_id: Int,
 
     val category_name: String,
-    val category_limit: Int
+    val category_description: String,
+    val category_color: String,
+    val category_icon: String
+    //val category_limit: Int
 )

@@ -46,7 +46,8 @@
                 android:id="@+id/et_category_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Category Name" />
+                android:hint="Category Name"
+                android:minHeight="48dp" />
 
             <!-- Description -->
             <EditText
@@ -69,7 +70,8 @@
             <Spinner
                 android:id="@+id/spinner_color"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="48dp" />
 
             <!-- Icon Picker -->
             <TextView
@@ -82,7 +84,8 @@
             <Spinner
                 android:id="@+id/spinner_icon"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="48dp" />
 
             <!-- Add Button -->
             <Button
