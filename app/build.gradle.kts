@@ -49,6 +49,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     //bottom navigation
     implementation ("com.google.android.material:material:1.11.0")
 

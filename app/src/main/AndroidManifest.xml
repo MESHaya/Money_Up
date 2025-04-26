@@ -31,9 +31,6 @@
             android:name=".FilterActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchActivity"
-            android:exported="false" />
-        <activity
             android:name=".CategoryActivity"
             android:exported="false" />
         <activity
@@ -51,6 +48,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,5 +57,9 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
 
 </manifest>
