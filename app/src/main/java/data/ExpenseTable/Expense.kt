@@ -37,7 +37,7 @@ data class Expense(
 
     val expenseName : String,
 
-    val amount: Int,  // the amount spent
+    val amount: Double,  // the amount spent
 
     val date: String,  // changed to String for readability (e.g. "2025-04-13")
 
