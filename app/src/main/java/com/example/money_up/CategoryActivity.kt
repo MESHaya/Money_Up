@@ -56,9 +56,9 @@ class CategoryActivity : AppCompatActivity() {
                 val view = super.getDropDownView(position, convertView, parent) as TextView
                 val colorName = getItem(position)
 
-                // Set the background color based on the color name
+                //set the background color based on the color name
                 view.setBackgroundColor(getColorFromName(colorName))
-                view.setTextColor(Color.WHITE) // Optional: Set text color for better contrast
+                view.setTextColor(Color.WHITE)
                 return view
             }
         }
