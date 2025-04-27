@@ -21,6 +21,7 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     val category_id: Int = 0,
 
+    //category table columns
     @ColumnInfo(name = "user_id")
     val user_id: Int,
 

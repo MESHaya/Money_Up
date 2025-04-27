@@ -81,7 +81,8 @@ class CategoryActivity : AppCompatActivity() {
 
 
                 //error handling - check if all fields are filled
-                if(categoryName.isEmpty()||categoryDescription.isEmpty()){
+                if(categoryName.isEmpty()||categoryDescription.isEmpty())
+                {
                     Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
