@@ -21,7 +21,7 @@ class BudgetActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.nav_budget -> true
                 R.id.nav_expenses -> {
-                    val intent = Intent(this, ExpenseActivity::class.java)
+                    val intent = Intent(this, AllExpensesActivity::class.java)
                     val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
                     startActivity(intent, options.toBundle())
                     true

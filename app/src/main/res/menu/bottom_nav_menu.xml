@@ -10,7 +10,7 @@
         <item
             android:id="@+id/nav_expenses"
             android:icon="@drawable/expenses"
-            android:title="Expenses"
+            android:title="AllExpenses"
             />
         <item
             android:id="@+id/nav_budget"

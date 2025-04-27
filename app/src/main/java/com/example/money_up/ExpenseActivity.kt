@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,48 +20,36 @@ import kotlinx.coroutines.CoroutineScope
 
 class ExpenseActivity : AppCompatActivity() {
 
+    private var imageUri: Uri? = null
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            imageUri = uri
+            findViewById<ImageView>(R.id.photo_preview).setImageURI(uri)
+        }
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_expense)
 
-
-
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_expenses -> true
-                R.id.nav_home -> {
-                    val intent = Intent(this, HomePageActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
-                    true
-                }
-                R.id.nav_budget -> {
-                    val intent = Intent(this, BudgetActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
-                    true
-                }
-                R.id.nav_profile -> {
-                    val intent = Intent(this, ProfileActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
-                    true
-                }
-                R.id.nav_settings -> {
-                    val intent = Intent(this, SettingActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
-                    true
-                }
-                else -> false
-            }
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            finish() // Close the current activity and go back to the previous one
         }
 
-        // Highlight current tab
-        bottomNav.selectedItemId = R.id.nav_expenses
+        val photoPreview = findViewById<ImageView>(R.id.photo_preview)
+        val uploadButton = findViewById<Button>(R.id.upload_photo_button)
+
+        uploadButton.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
     }
-}
+
+
+    }
