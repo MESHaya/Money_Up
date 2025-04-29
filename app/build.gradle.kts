@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.money_up"
-        minSdk = 24
+        minSdk = 32
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -61,5 +61,12 @@ dependencies {
 
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+
+    //take a photo - cameraX
+    implementation("androidx.camera:camera-core:1.0.2")
+    implementation("androidx.camera:camera-camera2:1.0.2")
+    implementation("androidx.camera:camera-lifecycle:1.0.2")
+    implementation("androidx.camera:camera-view:1.0.0-alpha27")
+
 }
 
