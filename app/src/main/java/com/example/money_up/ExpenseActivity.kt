@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
@@ -15,6 +16,16 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.core.CameraSelector
+import java.io.File
+import android.Manifest
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,6 +41,9 @@ import java.util.Calendar
 class ExpenseActivity : AppCompatActivity() {
 
     private var imageUri: Uri? = null
+    private lateinit var imageCapture: ImageCapture
+    private lateinit var previewView: PreviewView
+
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -47,6 +61,14 @@ class ExpenseActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_expense)
 
+        //set up CameraX
+        previewView = findViewById(R.id.preview_view)   //retrieves previewView
+        if (allPermissionsGranted()) {
+            startCamera()
+        } else {
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS) //if permission not granted/requests necessary permission from user
+        }
+
         //get instance of the dao from db
         val expenseDao = MoneyUpDatabase.getDatabase(applicationContext).expenseDao()
         //pass dao into repo
@@ -56,6 +78,7 @@ class ExpenseActivity : AppCompatActivity() {
         val backButton = findViewById<ImageButton>(R.id.back_button)
         val photoPreview = findViewById<ImageView>(R.id.photo_preview)
         val uploadButton = findViewById<Button>(R.id.upload_photo_button)
+        val takePhotoButton = findViewById<Button>(R.id.take_photo_button)
         val saveButton = findViewById<Button>(R.id.btn_save_expense)
         val dateInput = findViewById<EditText>(R.id.et_date)
         val startTimeInput = findViewById<EditText>(R.id.et_start_time)
@@ -72,6 +95,11 @@ class ExpenseActivity : AppCompatActivity() {
         //upload photo button functionality
         uploadButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
+        }
+
+        //take photo button functionality - triggers method
+        takePhotoButton.setOnClickListener {
+            takePhoto()
         }
 
         //date picker dialog - triggers method
@@ -142,6 +170,60 @@ class ExpenseActivity : AppCompatActivity() {
             }
         }
     }
+
+        //startCamera method
+        private fun startCamera() {
+            val cameraProviderFuture = ProcessCameraProvider.getInstance(this)  //gets instance of ProcessCameraProvider/managing camera lifecycle
+
+            //when camera is ready
+            cameraProviderFuture.addListener({
+                val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+                //displays camera feed
+                val preview = Preview.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)  //camera feed will be displayed in this view
+                }
+
+                //create an object to capture images
+                imageCapture = ImageCapture.Builder().build()
+
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+
+            }, ContextCompat.getMainExecutor(this))
+        }
+
+        //takePhoto method
+        private fun takePhoto() {
+            val photoFile = File(externalMediaDirs.first(), "${System.currentTimeMillis()}.jpg")    //creates new file for image directory
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+            //method captures the photo
+            imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val savedUri = Uri.fromFile(photoFile)
+                    //stores the URI
+                    imageUri = savedUri
+                    //set image allowing user to see image
+                    findViewById<ImageView>(R.id.photo_preview).setImageURI(savedUri)
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    Toast.makeText(this@ExpenseActivity, "Error capturing photo: ${exception.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        //check permissions granted
+        private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        //define static members
+        companion object {
+            private const val REQUEST_CODE_PERMISSIONS = 10 //used as a request code when asking for permissions
+            private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)  //array holds the permissions required by the app
+        }
 
         //showDatePickerDialog method
         private fun showDatePickerDialog(dateInput: EditText) {
