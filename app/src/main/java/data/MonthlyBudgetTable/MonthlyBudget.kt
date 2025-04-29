@@ -20,19 +20,19 @@ import data.UserTable.User
 data class MonthlyBudget(
     @PrimaryKey(autoGenerate = true)
 
-    val monthlyBudget_id : Int = 0,
+    val monthlyBudget_id: Int = 0,
 
     @ColumnInfo(name = "user_id")
     val user_id: Int,
 
-    val monthlyBudget_name : String,
+    val monthlyBudget_name: String,
 
-    val month : String,
+    val month: String,
 
-    val total_budget : Int,
+    val total_budget: Int,
 
-    val min_amont : Int,
+    val min_amont: Int,
 
-    val max_amount : Int
+    val max_amount:Int,
 
 )
