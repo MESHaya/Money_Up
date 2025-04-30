@@ -48,7 +48,7 @@ class BudgetActivity : AppCompatActivity() {
     }
 
     private fun saveBudget() {
-        val monthlyBudgetName = etBudgetName.text.toString()
+        val  monthlyBudgetName = etBudgetName.text.toString()
         val minAmount = etMinBudget.text.toString().toDoubleOrNull()
         val maxAmount = etMaxBudget.text.toString().toDoubleOrNull()
 
