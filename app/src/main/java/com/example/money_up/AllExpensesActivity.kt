@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import data.MoneyUpDatabase
 import data.ExpenseTable.Expense
@@ -21,8 +22,9 @@ class AllExpensesActivity : AppCompatActivity() {
     private lateinit var pickDateButton: Button
     private lateinit var applyFilterButton: Button
     private lateinit var clearFiltersButton: Button
-    private lateinit var expensesListLayout: LinearLayout
-    private lateinit var categoryTotalsLayout: LinearLayout
+    private lateinit var expensesRecyclerView: RecyclerView
+    private lateinit var categoryTotalsRecyclerView: RecyclerView
+
 
     private var startDate: String? = null
     private var endDate: String? = null
@@ -34,20 +36,23 @@ class AllExpensesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_expenses)
 
-        expenseDao = data.MoneyUpDatabase .getDatabase(this).expenseDao()
+        expenseDao = data.MoneyUpDatabase.getDatabase(this).expenseDao()
+
 
         pickDateButton = findViewById(R.id.btn_pick_date)
         applyFilterButton = findViewById(R.id.btn_filter)
         clearFiltersButton = findViewById(R.id.clear_filters_button)
-        expensesListLayout = findViewById(R.id.rv_expenses)
-        categoryTotalsLayout = findViewById(R.id.tv_category_totals)
+        expensesRecyclerView = findViewById(R.id.recycler_expenses)
+        categoryTotalsRecyclerView = findViewById(R.id.recycler_category_totals)
+
+
 
         pickDateButton.setOnClickListener { openDateRangePicker() }
         applyFilterButton.setOnClickListener { loadExpenses() }
         clearFiltersButton.setOnClickListener { clearFilters() }
 
-        val add_expenseBTN = findViewById<Button>(R.id.add_expenseBTN)
-        add_expenseBTN.setOnClickListener {
+        val addExpenseButton = findViewById<Button>(R.id.add_expenseBTN)
+        addExpenseButton.setOnClickListener {
             val intent = Intent(this, ExpenseActivity::class.java)
             val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
             startActivity(intent, options.toBundle())
@@ -91,13 +96,13 @@ class AllExpensesActivity : AppCompatActivity() {
     private fun openDateRangePicker() {
         val calendar = Calendar.getInstance()
         DatePickerDialog(this, { _, year, month, dayOfMonth ->
-            val pickedDate = "$year-${month + 1}-$dayOfMonth"
+            val pickedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
             if (startDate == null) {
                 startDate = pickedDate
                 Toast.makeText(this, "Start Date Selected: $startDate", Toast.LENGTH_SHORT).show()
             } else {
                 endDate = pickedDate
-                Toast.makeText(this, "End Date Selected: $endDate", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "End Date Selected: $startDate to $endDate", Toast.LENGTH_SHORT).show()
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
@@ -123,7 +128,7 @@ class AllExpensesActivity : AppCompatActivity() {
     }
 
     private fun displayExpenses(expenses: List<Expense>) {
-        expensesListLayout.removeAllViews()
+        expensesRecyclerView.removeAllViews()
 
         for (expense in expenses) {
             val textView = TextView(this)
@@ -137,12 +142,12 @@ class AllExpensesActivity : AppCompatActivity() {
                 }
             }
 
-            expensesListLayout.addView(textView)
+            expensesRecyclerView.addView(textView)
         }
     }
 
     private fun displayCategoryTotals(expenses: List<Expense>) {
-        categoryTotalsLayout.removeAllViews()
+        categoryTotalsRecyclerView.removeAllViews()
 
         val categoryTotals = expenses.groupBy { it.category_id }
             .mapValues { entry -> entry.value.sumOf { it.amount } }
@@ -150,7 +155,7 @@ class AllExpensesActivity : AppCompatActivity() {
         for ((categoryId, totalAmount) in categoryTotals) {
             val textView = TextView(this)
             textView.text = "Category ID $categoryId: $totalAmount"
-            categoryTotalsLayout.addView(textView)
+            categoryTotalsRecyclerView.addView(textView)
         }
     }
 
