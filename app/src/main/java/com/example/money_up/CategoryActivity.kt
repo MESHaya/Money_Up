@@ -58,7 +58,7 @@ class CategoryActivity : AppCompatActivity() {
 
                 //set the background color based on the color name
                 view.setBackgroundColor(getColorFromName(colorName))
-                view.setTextColor(Color.WHITE)
+                view.setTextColor(Color.BLACK)
                 return view
             }
         }
@@ -114,13 +114,13 @@ class CategoryActivity : AppCompatActivity() {
     //function to get color from the name in spinner
     private fun getColorFromName(colorName: String?): Int {
         return when (colorName) {
-            "Red" -> Color.RED
-            "Blue" -> Color.BLUE
-            "Green" -> Color.GREEN
-            "Yellow" -> Color.YELLOW
-            "Orange" -> Color.parseColor("#FFA500")
-            "Purple" -> Color.parseColor("#800080")
-            "Teal" -> Color.parseColor("#008080")
+            "Red" -> Color.parseColor("#FF7F7F")
+            "Blue" -> Color.parseColor("#ADD8E6")
+            "Green" -> Color.parseColor("#90EE90")
+            "Yellow" -> Color.parseColor("#FFFFE0")
+            "Orange" -> Color.parseColor("#FFB347")
+            "Purple" -> Color.parseColor("#DDA0DD")
+            "Teal" -> Color.parseColor("#20B2AA")
             else -> Color.TRANSPARENT //default color
         }
     }

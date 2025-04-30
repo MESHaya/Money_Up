@@ -19,6 +19,8 @@ class HomePageActivity : AppCompatActivity() {
 
         val add_expenseBTN = findViewById<Button>(R.id.add_expenseBTN)
 
+        val add_categoryBTN = findViewById<Button>(R.id.btn_add_categoryBTN)
+
 // Add expense button functionality
         add_expenseBTN.setOnClickListener {
             val intent = Intent(this, ExpenseActivity::class.java)
@@ -26,6 +28,12 @@ class HomePageActivity : AppCompatActivity() {
             startActivity(intent, options.toBundle())
         }
 
+        //add category button functionality
+        add_categoryBTN.setOnClickListener {
+            val intent = Intent(this, CategoryActivity::class.java)
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+            startActivity(intent, options.toBundle())
+        }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 

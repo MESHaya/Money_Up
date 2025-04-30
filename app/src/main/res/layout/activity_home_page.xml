@@ -42,6 +42,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <Button
+        android:id="@+id/btn_add_categoryBTN"
+        android:layout_width="155dp"
+        android:layout_height="49dp"
+        android:backgroundTint="@color/orange"
+        android:text="Add Category"
+        android:textColor="@color/dark_green"
+        app:layout_constraintTop_toBottomOf="@id/add_expenseBTN"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 />
     <!-- Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
