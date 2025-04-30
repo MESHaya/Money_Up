@@ -72,7 +72,7 @@ class ExpenseActivity : AppCompatActivity() {
         categorySpinner.adapter = iconAdapter
 
         //set up CameraX
-        previewView = findViewById(R.id.photo_preview)   //retrieves previewView
+        previewView = findViewById(R.id.preview_view)   //retrieves previewView
         if (allPermissionsGranted()) {
             startCamera()
         } else {
