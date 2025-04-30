@@ -8,14 +8,18 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import data.MoneyUpDatabase
+import com.example.money_up.ExpenseAdapter
 import data.ExpenseTable.Expense
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+
+
 
 class AllExpensesActivity : AppCompatActivity() {
 
@@ -37,15 +41,17 @@ class AllExpensesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_all_expenses)
 
         expenseDao = data.MoneyUpDatabase.getDatabase(this).expenseDao()
-
-
         pickDateButton = findViewById(R.id.btn_pick_date)
         applyFilterButton = findViewById(R.id.btn_filter)
         clearFiltersButton = findViewById(R.id.clear_filters_button)
         expensesRecyclerView = findViewById(R.id.recycler_expenses)
         categoryTotalsRecyclerView = findViewById(R.id.recycler_category_totals)
 
+        lateinit var expenseAdapter: ExpenseAdapter
 
+        expenseAdapter = ExpenseAdapter()
+        expensesRecyclerView.adapter = expenseAdapter
+        expensesRecyclerView.layoutManager = LinearLayoutManager(this)
 
         pickDateButton.setOnClickListener { openDateRangePicker() }
         applyFilterButton.setOnClickListener { loadExpenses() }
@@ -96,6 +102,7 @@ class AllExpensesActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+
         }
     }
 
@@ -124,7 +131,6 @@ class AllExpensesActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun isWithinSelectedRange(dateString: String): Boolean {
         if (startDate == null || endDate == null) return true
         val date = dateFormatter.parse(dateString)
