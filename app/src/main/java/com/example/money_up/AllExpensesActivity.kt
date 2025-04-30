@@ -155,6 +155,7 @@ class AllExpensesActivity : AppCompatActivity() {
             }
 
             expensesRecyclerView.addView(textView)
+
         }
     }
 
