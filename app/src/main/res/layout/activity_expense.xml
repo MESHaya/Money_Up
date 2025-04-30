@@ -52,26 +52,24 @@
         android:id="@+id/et_start_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:hint="Start Time"
         android:inputType="time"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_date"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_date" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
 
     <!-- End Time -->
     <EditText
         android:id="@+id/et_end_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:hint="End Time"
         android:inputType="time"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_start_time"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_start_time" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
 
     <!-- Amount -->
     <EditText
@@ -109,7 +107,7 @@
         android:background="#FBAA6F"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_description" />
+        app:layout_constraintTop_toBottomOf="@id/et_description"/>
 
     <!-- Square Image Preview -->
     <ImageView
@@ -135,8 +133,6 @@
         app:layout_constraintHorizontal_bias="0.168"
         app:layout_constraintStart_toEndOf="@id/photo_preview"
         app:layout_constraintTop_toBottomOf="@id/spinner_category" />
-
-
 
     <!-- Upload Photo Button -->
     <Button
@@ -183,10 +179,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
        />
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

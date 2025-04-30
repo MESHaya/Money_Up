@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.graphics.Color
+import android.widget.ImageButton
+import android.widget.ImageView
 
 
 class CategoryActivity : AppCompatActivity() {
@@ -35,6 +37,13 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_category)
+
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+
+        //back button functionality
+        backButton.setOnClickListener {
+            finish() //close the current activity and go back to the previous one
+        }
 
 
         //get instance of the dao from db
@@ -63,6 +72,7 @@ class CategoryActivity : AppCompatActivity() {
             }
         }
 
+        //category spinner functionality
         //set the adapter to the spinner
         colorSpinner.adapter = colorAdapter
 
@@ -72,20 +82,18 @@ class CategoryActivity : AppCompatActivity() {
         iconAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         iconSpinner.adapter = iconAdapter
 
-        //handle the functionality of the add category button
-        addButton.setOnClickListener{
+        // handle the functionality of the add category button
+        addButton.setOnClickListener {
             val categoryName = nameInput.text.toString().trim()
             val categoryDescription = descriptionInput.text.toString().trim()
             val categoryColor = colorSpinner.selectedItem.toString()
             val categoryIcon = iconSpinner.selectedItem.toString()
 
-
-                //error handling - check if all fields are filled
-                if(categoryName.isEmpty()||categoryDescription.isEmpty())
-                {
-                    Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
+            // error handling - check if all fields are filled
+            if (categoryName.isEmpty() || categoryDescription.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             //create a new category object - add to database
                 val category = Category(
