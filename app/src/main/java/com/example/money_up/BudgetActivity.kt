@@ -5,23 +5,22 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import data.MoneyUpDatabase
 import data.MonthlyBudgetTable.MonthlyBudgetRepository
-import data.UserTable.OfflineUsersRepository
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.money_up.R
+import androidx.lifecycle.lifecycleScope
 import data.MonthlyBudgetTable.MonthlyBudget
+import data.MonthlyBudgetTable.MonthlyBudgetRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 
 class BudgetActivity : AppCompatActivity() {
 
-    //this repo handles the communication with the database
     private lateinit var repository: MonthlyBudgetRepository
     private lateinit var etBudgetName: EditText
     private lateinit var etMinBudget: EditText
@@ -33,88 +32,91 @@ class BudgetActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_budget)
 
-        // Initialize views
         etBudgetName = findViewById(R.id.et_budget_name)
         etMinBudget = findViewById(R.id.et_min_budget)
         etMaxBudget = findViewById(R.id.et_max_budget)
         btnSaveBudget = findViewById(R.id.btn_save_budget)
 
-        // Get instance of the dao from db
         val monthlyBudgetDao = MoneyUpDatabase.getDatabase(applicationContext).monthlyBudgetDao()
-        repository = MonthlyBudgetRepository(monthlyBudgetDao)
+        repository = MonthlyBudgetRepositoryImpl(monthlyBudgetDao) // assuming you implemented it correctly
 
         btnSaveBudget.setOnClickListener {
-            SaveBudget()
+            saveBudget()
         }
 
-        fun saveBudget() {
-            val monthlyBudget_name = etBudgetName.text.toString()
-            val min_amount = etMinBudget.text.toString().toDoubleOrNull()
-            val max_amount = etMaxBudget.text.toString().toDoubleOrNull()
-            //val total_budget=
+        setupBottomNav()
+    }
 
-            if (monthlyBudget_name.isEmpty() || min_amount == null || max_amount  == null) {
-                Toast.makeText(this, "Please fill in all fields correctly", Toast.LENGTH_SHORT).show()
-                return
-            }
+    private fun saveBudget() {
+        val monthlyBudgetName = etBudgetName.text.toString()
+        val minAmount = etMinBudget.text.toString().toDoubleOrNull()
+        val maxAmount = etMaxBudget.text.toString().toDoubleOrNull()
 
-            if (min_amount > max_amount ) {
-                Toast.makeText(this, "Minimum budget cannot be greater than maximum budget", Toast.LENGTH_SHORT).show()
-                return
-            }
+        if (monthlyBudgetName.isEmpty() || minAmount == null || maxAmount == null) {
+            Toast.makeText(this, "Please fill in all fields correctly", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-            // Create a new MonthlyBudget object
-            val newBudget = MonthlyBudget(monthlyBudget_name,min_amount, max_amount )
+        if (minAmount > maxAmount) {
+            Toast.makeText(this, "Minimum budget cannot be greater than maximum budget", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-            // Save the budget to the database
-            repository.insert(newBudget)
+        val newTotal = (minAmount + maxAmount).toInt()
 
-            Toast.makeText(this, "Budget saved successfully", Toast.LENGTH_SHORT).show()
+        // Launch a coroutine to handle Room operations
+        lifecycleScope.launch {
+            // Sum all existing total_budget values
+            val allBudgets = repository.getAllBudgetsStream().first() // get the current budgets
+            val previousTotal = allBudgets.sumOf { it.total_budget }
 
-            // Optionally, clear the input fields
+            val totalBudgetCombined = previousTotal + newTotal
+
+            val newBudget = MonthlyBudget(
+                user_id = 1,
+                monthlyBudget_name = monthlyBudgetName,
+                month = "April",
+                total_budget = newTotal,
+                min_amont = minAmount.toInt(),
+                max_amount = maxAmount.toInt()
+            )
+
+            repository.insertBudget(newBudget)
+
+            Toast.makeText(this@BudgetActivity, "Budget saved successfully", Toast.LENGTH_SHORT).show()
+
             etBudgetName.text.clear()
             etMinBudget.text.clear()
             etMaxBudget.text.clear()
-
-            // Refresh the RecyclerView or any other UI component to show the updated budget history
-            // ...
         }
+    }
 
-
+    private fun setupBottomNav() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_budget -> true
                 R.id.nav_expenses -> {
-                    val intent = Intent(this, AllExpensesActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
+                    startActivity(Intent(this, AllExpensesActivity::class.java))
                     true
                 }
                 R.id.nav_home -> {
-                    val intent = Intent(this, HomePageActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
+                    startActivity(Intent(this, HomePageActivity::class.java))
                     true
                 }
                 R.id.nav_profile -> {
-                    val intent = Intent(this, ProfileActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
+                    startActivity(Intent(this, ProfileActivity::class.java))
                     true
                 }
                 R.id.nav_settings -> {
-                    val intent = Intent(this, SettingActivity::class.java)
-                    val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-                    startActivity(intent, options.toBundle())
+                    startActivity(Intent(this, SettingActivity::class.java))
                     true
                 }
                 else -> false
             }
         }
 
-        // Highlight current tab
         bottomNav.selectedItemId = R.id.nav_budget
     }
-        }
+}
