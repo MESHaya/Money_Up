@@ -22,6 +22,7 @@ import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import java.io.File
 import android.Manifest
+import android.widget.ArrayAdapter
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -61,8 +62,17 @@ class ExpenseActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_expense)
 
+        //set up the spinner with category labels
+        val categoryLabels = resources.getStringArray(R.array.category_labels)
+        val iconAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryLabels)
+        iconAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        //get reference to the spinner
+        val categorySpinner = findViewById<Spinner>(R.id.spinner_category)
+        categorySpinner.adapter = iconAdapter
+
         //set up CameraX
-        previewView = findViewById(R.id.preview_view)   //retrieves previewView
+        previewView = findViewById(R.id.photo_preview)   //retrieves previewView
         if (allPermissionsGranted()) {
             startCamera()
         } else {
@@ -85,7 +95,6 @@ class ExpenseActivity : AppCompatActivity() {
         val endTimeInput = findViewById<EditText>(R.id.et_end_time)
         val amountInput = findViewById<EditText>(R.id.et_amount)
         val descriptionInput = findViewById<EditText>(R.id.et_description)
-        val categorySpinner = findViewById<Spinner>(R.id.spinner_category)
 
         //back button functionality
         backButton.setOnClickListener {
@@ -125,8 +134,7 @@ class ExpenseActivity : AppCompatActivity() {
             val endTime = endTimeInput.text.toString().trim()
             val amount = amountInput.text.toString().trim()
             val description = descriptionInput.text.toString().trim()
-            val categoryIndex =
-                categorySpinner.selectedItemPosition // Assuming categories are indexed
+            val categoryIndex = categorySpinner.selectedItemPosition // (assuming categories are indexed)
 
             //error handling - check if all fields are filled
             if (date.isEmpty() || startTime.isEmpty() || endTime.isEmpty() || amount.isEmpty() || description.isEmpty()) {

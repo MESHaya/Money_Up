@@ -52,24 +52,26 @@
         android:id="@+id/et_start_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:hint="Start Time"
         android:inputType="time"
-        app:layout_constraintTop_toBottomOf="@id/et_date"
-        app:layout_constraintStart_toStartOf="parent"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_date" />
 
     <!-- End Time -->
     <EditText
         android:id="@+id/et_end_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:hint="End Time"
         android:inputType="time"
-        app:layout_constraintTop_toBottomOf="@id/et_start_time"
-        app:layout_constraintStart_toStartOf="parent"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_start_time" />
 
     <!-- Amount -->
     <EditText
@@ -102,35 +104,25 @@
         android:id="@+id/spinner_category"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/et_description"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp"
+        android:minHeight="48dp"
+        android:background="#FBAA6F"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_description" />
 
-    <!-- Square Image Preview -->
+    <!-- Combined Image View for Photo Preview and Camera -->
     <ImageView
         android:id="@+id/photo_preview"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
         android:layout_marginTop="24dp"
-        android:layout_marginRight="130dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@id/spinner_category"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Preview View for CameraX -->
-    <androidx.camera.view.PreviewView
-        android:id="@+id/preview_view"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.168"
-        app:layout_constraintStart_toEndOf="@id/photo_preview"
-        app:layout_constraintTop_toBottomOf="@id/spinner_category" />
 
     <!-- Upload Photo Button -->
     <Button
