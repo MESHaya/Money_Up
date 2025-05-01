@@ -1,43 +1,52 @@
-package com.example.money_up
-
 import android.content.Intent
 import android.net.Uri
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.money_up.R
 import data.ExpenseTable.Expense
 
+class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(DIFF_CALLBACK) {
 
-class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Expense>() {
+            override fun areItemsTheSame(oldItem: Expense, newItem: Expense): Boolean {
+                return oldItem.expense_id == newItem.expense_id // Make sure you have a unique `id`
+            }
 
-    private var expenses = listOf<Expense>()
-
-    fun submitList(list: List<Expense>) {
-        expenses = list
-        notifyDataSetChanged()
-    }
-
-    inner class ExpenseViewHolder(itemView: TextView) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val textView = TextView(parent.context)
-        return ExpenseViewHolder(textView)
-    }
-
-    override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
-        val expense = expenses[position]
-        holder.textView.text = "${expense.expenseName} - ${expense.amount} - ${expense.date}"
-
-        if (expense.photo.isNotEmpty()) {
-            holder.textView.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType(Uri.parse(expense.photo), "image/*")
-                holder.textView.context.startActivity(intent)
+            override fun areContentsTheSame(oldItem: Expense, newItem: Expense): Boolean {
+                return oldItem == newItem
             }
         }
     }
 
-    override fun getItemCount() = expenses.size
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_expense, parent, false)
+        return ExpenseViewHolder(view)
+    }
+
+    class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val expenseInfoTextView: TextView = itemView.findViewById(R.id.tv_expense_info)
+    }
+
+    override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
+        val expense = getItem(position)
+        holder.expenseInfoTextView.text = "${expense.expenseName} - ${expense.amount} - ${expense.date} "
+
+        if (expense.photo.isNotEmpty()) {
+            holder.expenseInfoTextView.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(Uri.parse(expense.photo), "image/*")
+                holder.expenseInfoTextView.context.startActivity(intent)
+            }
+        }
+
+    }
 }

@@ -1,9 +1,8 @@
 package com.example.money_up
 
-import android.app.ActivityOptions
+import ExpenseAdapter
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -23,8 +22,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import data.CategoryTable.Category
 import data.CategoryTable.OfflineCategoryRepository
 import data.ExpenseTable.Expense
 import data.ExpenseTable.OfflineExpenseRepository
@@ -58,10 +55,13 @@ class ExpenseActivity : AppCompatActivity() {
     // Initialize repository for expenses and categories
     private lateinit var expenseRepository: OfflineExpenseRepository
     private lateinit var categoryRepository: OfflineCategoryRepository
+    private lateinit var expenseAdapter: ExpenseAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expense)
+
+        expenseAdapter = ExpenseAdapter()
 
         // Set up CameraX
         previewView = findViewById(R.id.preview_view)
@@ -113,6 +113,7 @@ class ExpenseActivity : AppCompatActivity() {
         val endTimeInput = findViewById<EditText>(R.id.et_end_time)
         val amountInput = findViewById<EditText>(R.id.et_amount)
         val descriptionInput = findViewById<EditText>(R.id.et_description)
+        val expenseNameInput = findViewById<EditText>(R.id.et_expense_name)
 
         // Back button functionality
         backButton.setOnClickListener {
@@ -147,6 +148,7 @@ class ExpenseActivity : AppCompatActivity() {
         // Save expense button functionality
         saveButton.setOnClickListener {
             // Retrieve the input values
+            val expenseName = expenseNameInput.text.toString().trim()
             val date = dateInput.text.toString().trim()
             val startTime = startTimeInput.text.toString().trim()
             val endTime = endTimeInput.text.toString().trim()
@@ -171,7 +173,7 @@ class ExpenseActivity : AppCompatActivity() {
             val expense = Expense(
                 user_id = 1, // Replace with the actual user ID
                 category_id = categoryIndex + 1, // Adjust based on your category IDs
-                expenseName = description,
+                expenseName = expenseName,
                 amount = amount.toDoubleOrNull() ?: 0.0,
                 date = date,
                 startTime = startTime,
@@ -183,7 +185,10 @@ class ExpenseActivity : AppCompatActivity() {
             // Insert the expense into the database
             CoroutineScope(Dispatchers.IO).launch {
                 expenseRepository.insertExpense(expense)
+                //update the UI
                 runOnUiThread {
+
+
                     Toast.makeText(this@ExpenseActivity, "Expense Successfully Saved!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
