@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import data.MoneyUpDatabase
+import data.ExpenseTable.ExpenseDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class AllExpensesActivity : AppCompatActivity() {
 
@@ -27,37 +29,39 @@ class AllExpensesActivity : AppCompatActivity() {
     private lateinit var clearFiltersButton: Button
     private lateinit var expensesRecyclerView: RecyclerView
     private lateinit var expenseAdapter: ExpenseAdapter
+    private lateinit var expenseDao: ExpenseDao
 
     private var startDate: String? = null
     private var endDate: String? = null
 
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    private lateinit var expenseDao: data.ExpenseTable.ExpenseDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_expenses)
 
+        // Initialize DAO first
         expenseDao = MoneyUpDatabase.getDatabase(this).expenseDao()
 
 
 
+
+
+        // Expense list initialization
         pickDateButton = findViewById(R.id.btn_pick_date)
         applyFilterButton = findViewById(R.id.btn_filter)
         clearFiltersButton = findViewById(R.id.clear_filters_button)
         expensesRecyclerView = findViewById(R.id.recycler_expenses)
 
-         expenseAdapter = ExpenseAdapter()
+        expenseAdapter = ExpenseAdapter()
         expensesRecyclerView.adapter = expenseAdapter
         expensesRecyclerView.layoutManager = LinearLayoutManager(this)
-
-
 
         pickDateButton.setOnClickListener { openDateRangePicker() }
         applyFilterButton.setOnClickListener { loadExpenses() }
         clearFiltersButton.setOnClickListener { clearFilters() }
 
-
+        // Add Expense Button
         val addExpenseButton = findViewById<Button>(R.id.add_expenseBTN)
         addExpenseButton.setOnClickListener {
             val intent = Intent(this, ExpenseActivity::class.java)
@@ -65,6 +69,7 @@ class AllExpensesActivity : AppCompatActivity() {
             startActivity(intent, options.toBundle())
         }
 
+        // Bottom Navigation Setup
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.selectedItemId = R.id.nav_expenses
         bottomNav.setOnItemSelectedListener {
@@ -108,34 +113,16 @@ class AllExpensesActivity : AppCompatActivity() {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
 
-    private fun isWithinSelectedRange(dateString: String): Boolean {
-        // If no start and end dates are selected, show all expenses
-        if (startDate == null && endDate == null) return true
-
-        // Otherwise, filter based on the selected date range
-        val date = dateFormatter.parse(dateString) ?: return false
-        val start = dateFormatter.parse(startDate!!) ?: return false
-        val end = dateFormatter.parse(endDate!!) ?: return false
-
-        return (date == start || date == end || (date.after(start) && date.before(end)))
-    }
-
     private fun loadExpenses() {
         lifecycleScope.launch {
-            expenseDao.getAllExpenses().collectLatest { allExpenses ->
-                // Log all expenses for debugging
-                Log.d("AllExpenses", "Fetched expenses: ${allExpenses.size}")
-
-                // Apply date filter if range is set
-                val filtered = allExpenses.filter { isWithinSelectedRange(it.date) }
-
-                // Log filtered expenses for debugging
-                Log.d("FilteredExpenses", "Filtered expenses: ${filtered.size}")
-
-                // Update the adapter with the filtered or all expenses
+            expenseDao.getAllExpenses().collectLatest { expenses ->
+                val filteredExpenses = if (startDate != null && endDate != null) {
+                    expenses.filter { isWithinSelectedRange(it.date) }
+                } else {
+                    expenses
+                }
                 withContext(Dispatchers.Main) {
-                    expenseAdapter.submitList(filtered)
-
+                    expenseAdapter.submitList(filteredExpenses)
                 }
             }
         }
@@ -146,8 +133,15 @@ class AllExpensesActivity : AppCompatActivity() {
         startDate = null
         endDate = null
         Toast.makeText(this, "Filters cleared", Toast.LENGTH_SHORT).show()
-
-        // Ensure that the loadExpenses method reloads all expenses without any filter
         loadExpenses()
     }
+
+    private fun isWithinSelectedRange(dateString: String): Boolean {
+        if (startDate == null && endDate == null) return true
+        val date = dateFormatter.parse(dateString) ?: return false
+        val start = dateFormatter.parse(startDate!!) ?: return false
+        val end = dateFormatter.parse(endDate!!) ?: return false
+        return (date == start || date == end || (date.after(start) && date.before(end)))
+    }
 }
+

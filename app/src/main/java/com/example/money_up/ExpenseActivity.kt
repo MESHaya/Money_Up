@@ -179,7 +179,8 @@ class ExpenseActivity : AppCompatActivity() {
                 startTime = startTime,
                 endTime = endTime,
                 description = description,
-                photo = imageUri?.toString() ?: ""
+                imageUri = imageUri?.toString() ?: ""
+
             )
 
             // Insert the expense into the database

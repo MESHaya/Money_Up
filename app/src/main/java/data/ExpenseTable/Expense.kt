@@ -47,5 +47,6 @@ data class Expense(
 
     val description: String,  // what was this expense?
 
-    val photo: String  // file path or URI to image of receipt, etc.
+    val imageUri: String
+
 )

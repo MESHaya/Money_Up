@@ -9,8 +9,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+
+
 @Dao
 interface ExpenseDao {
+
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
