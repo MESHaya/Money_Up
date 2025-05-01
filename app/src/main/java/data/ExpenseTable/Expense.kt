@@ -41,7 +41,9 @@ data class Expense(
 
     val date: String,  // changed to String for readability (e.g. "2025-04-13")
 
-    val time: String,  // changed to String (e.g. "14:30"), you could also use Date/Time types if you want
+    val startTime: String,
+
+    val endTime: String,
 
     val description: String,  // what was this expense?
 
