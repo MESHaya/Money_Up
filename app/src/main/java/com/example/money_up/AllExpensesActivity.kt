@@ -30,6 +30,8 @@ class AllExpensesActivity : AppCompatActivity() {
     private lateinit var expensesRecyclerView: RecyclerView
     private lateinit var expenseAdapter: ExpenseAdapter
     private lateinit var expenseDao: ExpenseDao
+    private lateinit var categoryTotalsAdapter: CategoryTotalsAdapter
+
 
     private var startDate: String? = null
     private var endDate: String? = null
@@ -44,6 +46,11 @@ class AllExpensesActivity : AppCompatActivity() {
         expenseDao = MoneyUpDatabase.getDatabase(this).expenseDao()
 
 
+        categoryTotalsAdapter = CategoryTotalsAdapter()
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_category_totals)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = categoryTotalsAdapter
 
 
 
@@ -99,6 +106,14 @@ class AllExpensesActivity : AppCompatActivity() {
         }
     }
 
+
+
+    override fun onResume() {
+        super.onResume()
+        loadCategoryTotals()
+        loadExpenses()
+    }
+
     private fun openDateRangePicker() {
         val calendar = Calendar.getInstance()
         DatePickerDialog(this, { _, year, month, dayOfMonth ->
@@ -127,6 +142,29 @@ class AllExpensesActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun loadCategoryTotals() {
+        lifecycleScope.launch {
+            val flow = if (startDate != null && endDate != null) {
+                expenseDao.getCategoryNameTotalsBetweenDates(startDate!!, endDate!!)
+            } else {
+                expenseDao.getCategoryNameTotals()
+            }
+
+            flow.collectLatest { totals ->
+                Log.d("CATEGORY_TOTALS", "Received totals: ${totals.size} categories")
+                for (item in totals) {
+                    Log.d("CATEGORY_TOTALS_ITEM", "${item.category_name} - ${item.totalAmount}")
+                }
+                withContext(Dispatchers.Main) {
+                    categoryTotalsAdapter.setData(totals)
+                }
+            }
+        }
+    }
+
+
+
 
 
     private fun clearFilters() {

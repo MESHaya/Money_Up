@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
+import data.CategoryNameTotal
+import data.CategoryTotal
 import kotlinx.coroutines.flow.Flow
 
 
@@ -14,6 +16,32 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ExpenseDao {
 
+    @Query("""
+    SELECT category_id, SUM(amount) AS totalAmount
+    FROM expenses
+    WHERE date BETWEEN :startDate AND :endDate
+    GROUP BY category_id
+""")
+    fun getCategoryTotalsBetweenDates(startDate: String, endDate: String): Flow<List<CategoryTotal>>
+
+
+
+    @Query("""
+    SELECT c.category_name, SUM(e.amount) AS totalAmount
+    FROM expenses e
+    JOIN category c ON e.category_id = c.category_id
+    WHERE e.date BETWEEN :startDate AND :endDate
+    GROUP BY e.category_id
+""")
+    fun getCategoryNameTotalsBetweenDates(startDate: String, endDate: String): Flow<List<CategoryNameTotal>>
+
+    @Query("""
+    SELECT c.category_name, SUM(e.amount) AS totalAmount
+    FROM expenses e
+    JOIN category c ON e.category_id = c.category_id
+    GROUP BY e.category_id
+""")
+    fun getCategoryNameTotals(): Flow<List<CategoryNameTotal>>
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
