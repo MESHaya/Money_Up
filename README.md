@@ -28,7 +28,7 @@
 - **Tools**: Android Studio, Jetpack Libraries
 
 ---
-# how to run the app from a zipped folder:
+# ▶️ How to run the app from a zipped folder:
 
 
 To run the **Money_Up** Android app from a zipped project folder, first extract the contents of the `.zip` file to a location on your computer.
@@ -38,5 +38,7 @@ After syncing completes, connect your Android device or start an emulator, then 
 Make sure you have a stable internet connection during the first launch to download any missing dependencies.
 If you encounter issues related to Room database migrations (such as missing columns), uninstall the app from the emulator or device and rebuild it to reset the database.
 
+---
 
+# 🎬 YouTube Link: https://youtu.be/dsMaCm0MtCc
 
