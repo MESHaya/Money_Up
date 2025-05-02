@@ -45,9 +45,11 @@ class ProfileActivity : AppCompatActivity() {
             if (budgetList.isNotEmpty()) {
                 val firstBudget = budgetList[0]
                 val budgetAmount = firstBudget.total_budget
+                val budgetMin = firstBudget.min_amont
+                val budgetMax = firstBudget.max_amount
                 val budgetName = firstBudget.monthlyBudget_name
                 val budgetLabel = findViewById<TextView>(R.id.active_budgets_label)
-                budgetLabel.text = "Active Budget: $budgetName - R$budgetAmount"
+                budgetLabel.text = "Active Goal: \n$budgetName - R$budgetAmount \nMin:R$budgetMin \nMax:R$budgetMax"
 
             }
         }
